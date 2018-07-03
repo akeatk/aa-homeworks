@@ -14,7 +14,7 @@ end
 class Play
   attr_accessor :title, :year, :playwright_id
 
-  def find_by_title(title)
+  def self.find_by_title(title)
     data = PlayDBConnection.instance.execute(<<-SQL, title)
       SELECT
         *
@@ -27,7 +27,7 @@ class Play
     data.map {|datum| Play.new(datum)}
   end
 
-  def find_by_playwright(name)
+  def self.find_by_playwright(name)
     data = PlayDBConnection.instance.execute(<<-SQL, name)
       SELECT
         *
@@ -83,12 +83,12 @@ end
 # In addition, create a Playwright class and add the following methods to our ORM.
 #
 class Playwright
-  Self.all
+  def self.all
     data = PlayDBConnection.instance.execute("SELECT * FROM playwrights")
     data.map { |datum| Playwright.new(datum) }
   end
-
-  Self.find_by_name(name)
+  
+  def self.find_by_name(name)
     data = PlayDBConnection.instance.execute(<<-SQL, name)
       SELECT
         *
@@ -97,10 +97,10 @@ class Playwright
       WHERE
         name = ?
     SQL
-
+  
     data.map {|datum| Play.new(datum)}
   end
-
+  
   def initialize(options)
     @id = options['id']
     @name = options['name']
@@ -131,13 +131,13 @@ class Playwright
   end
 
   def get_plays
-    PlayDBConnection.instance.execute(<<-SQL, @id)
+    data = PlayDBConnection.instance.execute(<<-SQL, @id)
       SELECT
         *
       FROM
         plays
       WHERE
-        id = playwright_id
+        ? = playwright_id
     SQL
 
     data.map {|datum| Play.new(datum)}
