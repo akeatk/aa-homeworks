@@ -1,0 +1,64 @@
+<style>
+  body {
+    margin: 0 auto;
+    width: 500px;
+    background-color:darkgray;
+    padding: 30 30px 30 30px;
+    border-left: 20px solid gray;
+    border-right: 20px solid gray;
+  }
+  .title {
+    text-align: center;
+    font-family: arial;
+    color: blue;
+    font-size: 50px;
+  }
+  a {
+    font: 11px Arial;
+    text-decoration: none;
+    background-color: white;
+    color: black;
+    padding: 1px 6px 1px 6px;
+    border-top: 1px solid lightgray;
+    border-right: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+    border-left: 1px solid lightgray;
+    border-radius: 4px;
+    height: 14px;
+  }
+  .flexed {
+    display: flex;
+  }
+</style>
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Solomusic</title>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    
+  </head>
+
+  <body>
+    <h1 class='title'>MUSIC APP</h1>
+    <header class='flexed'>
+      <% if logged_in? %>
+        <a href=" <%= users_url %> ">
+          <input type="hidden" name="authenticity_token" value="<%=form_authenticity_token%>">
+          Take me Home
+        </a>
+        <br>
+        <form action=" <%= session_url %> " method="post">
+          Logged in as: <%= current_user.email %>
+          <input type="hidden" name='_method' value='delete'>
+          <input type="hidden" name="authenticity_token" value="<%=form_authenticity_token%>">
+          <input type="submit" value="Sign Out">
+        </form>
+      <% end %>
+    </header>
+    <%= yield %>
+  </body>
+</html>
